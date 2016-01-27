@@ -62,12 +62,14 @@ func main() {
 	// Register handlers.
 	d.Handle(
 		gatt.PeripheralDiscovered(func(p gatt.Peripheral, a *gatt.Advertisement, rssi int) {
-			if !strings.Contains(strings.ToUpper("Polar H7 85926514"), strings.ToUpper("polar")) {
+			if !strings.Contains(strings.ToUpper(a.LocalName), strings.ToUpper("polar")) {
+				log.Printf("INFO: FOUND %s\n", a.LocalName)
 				return // This is not a heart rate monitor.
 			}
 
 			// Stop scanning once we've found the heart rate monitor.
 			p.Device().StopScanning()
+			log.Printf("INFO: FOUND %s %s\n", a.LocalName, p.ID())
 			fmt.Printf("%s\n", p.ID())
 			<-done
 		}),
