@@ -71,7 +71,7 @@ func main() {
 			p.Device().StopScanning()
 			log.Printf("INFO: FOUND %s %s\n", a.LocalName, p.ID())
 			fmt.Printf("%s\n", p.ID())
-			<-done
+			close(done)
 		}),
 	)
 
