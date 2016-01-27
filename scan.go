@@ -57,6 +57,8 @@ func main() {
 		return
 	}
 
+	done := make(chan bool)
+
 	// Register handlers.
 	d.Handle(
 		gatt.PeripheralDiscovered(func(p gatt.Peripheral, a *gatt.Advertisement, rssi int) {
@@ -67,8 +69,10 @@ func main() {
 			// Stop scanning once we've found the heart rate monitor.
 			p.Device().StopScanning()
 			fmt.Printf("%s\n", p.ID())
+			<-done
 		}),
 	)
 
 	d.Init(onStateChanged)
+	<-done
 }
